@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:game/widget/math_puzzle_cal_widget.dart';
+
+import 'package:game/widget/popupWidget.dart';
 import 'package:numeric_keyboard/numeric_keyboard.dart';
 
 class MathPuzzleCalculator extends StatefulWidget {
@@ -12,9 +16,17 @@ class MathPuzzleCalculator extends StatefulWidget {
 }
 
 class _MathPuzzleCalculatorState extends State<MathPuzzleCalculator> {
-String text = '';
-
+  String text = '';
+  static const maxseconds = 10;
+  int seconds = maxseconds;
+  Timer? timer;
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    startTimer();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -51,58 +63,65 @@ String text = '';
                     ],
                   ),
                   Container(
-                      margin: EdgeInsets.only(left: 5),
-                      alignment: Alignment.topLeft,
-                      child: Icon(
-                        Icons.pause_circle,
-                        size: 35,
-                        color: Colors.purple.shade200,
-                      )),
+                    margin: EdgeInsets.only(left: 5),
+                    alignment: Alignment.topLeft,
+                    child: DialogExample(),
+                  ),
                 ],
               ),
             ),
+            Container(
+              margin: EdgeInsets.only(bottom: 20),
+              height: 5,
+              width: double.infinity,
+              child: LinearProgressIndicator(
+                value: seconds / maxseconds,
+                backgroundColor: Colors.purple.shade100,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.teal.shade200),
+              ),
+            ),
             ElevatedButton(
-              onPressed: () { showModalBottomSheet<void>(
-            context: context,
-            builder: (BuildContext context) {
-              return Container(
-                height: 500,
-                color: Colors.white,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      const Text('Quick Calculation'),
-                      ElevatedButton(
-                        child: const Text('GOT IT!'),
-                        onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                showModalBottomSheet<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      height: 500,
+                      color: Colors.white,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            const Text('Quick Calculation'),
+                            ElevatedButton(
+                              child: const Text('GOT IT!'),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );  },
+                    );
+                  },
+                );
+              },
               child: Container(
-                width: 70,
                 color: Colors.white,
-              
+                alignment: Alignment.center,
+                height: 20,
+                width: 75,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      child: Text(
-                        "Calculator",
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.purple.shade200),
-                      ),
+                    Text(
+                      "Calculator",
+                      style: TextStyle(fontSize: 12, color: Colors.purple.shade200),
                     ),
                     Container(
                       child: Icon(
                         Icons.info,
-                        color: Colors.purple.shade100,
-                        size: 13,
+                        color: Colors.purple.shade200,
+                        size: 15,
                       ),
                     ),
                   ],
@@ -139,7 +158,7 @@ String text = '';
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 50, bottom: 20),
+              margin: EdgeInsets.only(top: 20, bottom: 20),
               alignment: Alignment.center,
               height: 40,
               width: 250,
@@ -154,45 +173,51 @@ String text = '';
                     fontWeight: FontWeight.bold),
               ),
             ),
-            
-             NumericKeyboard(
-            onKeyboardTap: _onKeyboardTap,
-            textColor: Colors.purple.shade100,
-            
-
-            rightButtonFn: () {
-              setState(() {
-                text = text.substring(0, text.length - 1);
-              });
-            },
-            rightIcon: Icon(
-              Icons.backspace,
-              color: Colors.teal.shade200,
+            NumericKeyboard(
+              onKeyboardTap: _onKeyboardTap,
+              textColor: Colors.purple.shade100,
+              rightButtonFn: () {
+                setState(() {
+                  text = text.substring(0, text.length - 1);
+                });
+              },
+              rightIcon: Icon(
+                Icons.backspace,
+                color: Colors.teal.shade200,
+              ),
+              leftButtonFn: () {
+                setState(() {});
+                text = '';
+              },
+              leftIcon: Icon(
+                Icons.refresh,
+                color: Colors.teal.shade200,
+              ),
             ),
-            leftButtonFn: () {
-              setState(() {
-                
-              });
-              text ='';
-            },
-            leftIcon: Icon(
-              Icons.refresh,
-              color: Colors.teal.shade200,
-            ),
-          ),
-
-
-
           ],
         ),
       ),
     );
   }
-   _onKeyboardTap(String value) {
+
+  _onKeyboardTap(String value) {
     setState(() {
       text = text + value;
     });
   }
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (_) {
+      setState(() {});
+      if (seconds > 0) {
+        seconds--;
+      } else {
+        stopTimer();
+      }
+    });
+  }
+
+  void stopTimer() {
+    timer?.cancel();
+  }
 }
-
-
