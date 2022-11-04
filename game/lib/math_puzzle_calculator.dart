@@ -208,16 +208,23 @@ class _MathPuzzleCalculatorState extends State<MathPuzzleCalculator> {
 
   void startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (_) {
-      setState(() {});
-      if (seconds > 0) {
+    setState(() {
+      
+    });   if (seconds > 0) {
         seconds--;
       } else {
         stopTimer();
       }
+     
     });
   }
 
   void stopTimer() {
     timer?.cancel();
+  }
+  @override
+  void dispose() {
+    stopTimer();
+    super.dispose();
   }
 }

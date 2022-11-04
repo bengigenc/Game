@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:game/math_puzzle.dart';
 import 'package:game/math_puzzle_calculator.dart';
 import 'package:game/open.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+     
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,

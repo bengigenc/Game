@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+
 import 'package:game/math_puzzle.dart';
 
 class Open extends StatefulWidget {
@@ -10,6 +14,7 @@ class Open extends StatefulWidget {
 }
 
 class _OpenState extends State<Open> {
+    Timer? _timer;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,10 +35,17 @@ class _OpenState extends State<Open> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Container(
-                          height: 30,
-                          child: Image.asset("assets/images/kupa.png"),
-                        ),
+                        GestureDetector(onTap: () async {
+                      _timer?.cancel();
+                    
+                    
+                          
+                        },
+                          child: Container(
+                            height: 30,
+                            child: Image.asset("assets/images/kupa.png"),
+                          ),
+                        ),  
                         Container(
                           child: Text(
                             "23",
